@@ -56,7 +56,7 @@ def submit(file, problem_id, cookies):
     url = 'http://informatics.msk.ru/py/problem/{}/submit'.format(problem_id)
     while True:
         time.sleep(1)
-        r = post_request(url, data={'lang_id': 3}, cookies=cookies, files=dict(file=open(file)), timeout=1)
+        r = post_request(url, data={'lang_id': 3 if (file.split('.')[-1] == 'cpp') else 11}, cookies=cookies, files=dict(file=open(file)), timeout=1)
 
 
 submit('Source.cpp', 111134, auth('login', 'password'))
