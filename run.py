@@ -66,7 +66,7 @@ def get_page(url, data=None, cookies=None):
     :return: request object
     """
     r = get_request(url, data=data, cookies=cookies)
-    while r is None:
+    while r is None or r.status_code != 200:
         time.sleep(1)
         r = get_request(url, data=data, cookies=cookies)
     return r
@@ -80,7 +80,7 @@ def auth(username, password):
     """
     url = 'http://informatics.msk.ru/login/index.php'
     r = post_request(url, dict(username=username, password=password), cookies={})
-    while r is None:
+    while r is None or len(r.history) == 0:
         time.sleep(1)
         r = post_request(url, dict(username=username, password=password), cookies={})
     page = html.fromstring(r.text)
