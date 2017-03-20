@@ -66,7 +66,7 @@ def get_page(url, data=None, cookies=None):
     :return: request object
     """
     r = get_request(url, data=data, cookies=cookies)
-    while r is None or r.status_code != 500:
+    while r is None or r.status_code == 500:
         time.sleep(1)
         r = get_request(url, data=data, cookies=cookies)
     return r
