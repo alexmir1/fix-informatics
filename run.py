@@ -71,6 +71,7 @@ def get_page(url, data=None, cookies=None):
         r = get_request(url, data=data, cookies=cookies)
     return r
 
+
 def auth(username, password):
     """
     Authenticates at informatics.msk.ru
@@ -88,6 +89,18 @@ def auth(username, password):
     user_id = id_data.attrib['href']\
         .replace('http://informatics.msk.ru/user/view.php?id=', '').replace('&course=1', '')
     return r.history[0].cookies, user_id
+
+
+def get_problem_id(id, cookies=None):
+    """
+    get real problem id from id from link
+    :param id: id from link
+    :param cookies: auth with permissions to see with problem
+    :return: real problem id
+    """
+    url = 'http://informatics.msk.ru/mod/statements/view3.php?id={}'.format(id)
+    page = html.fromstring(get_page(url, cookies=cookies).text)
+    return page.xpath('//*[@id="problem_id"]')[0].text
 
 class Run:
     """
@@ -124,7 +137,6 @@ class Run:
             data.append([c.text for c in row.getchildren()])
         return data
 
-
     def get_source(self, run):
         """
         get source code
@@ -138,7 +150,6 @@ class Run:
         page = html.fromstring(r.text)
         data = page.xpath('//div/textarea')[0]
         return data.text
-
 
     def has_submitted(self):
         """
@@ -173,10 +184,11 @@ class Run:
 
 if __name__ == '__main__':
     login = input('login: ')
-    password = input('pasword: ')
+    password = input('password: ')
     cookies, user_id = auth(login, password)
     print('auth success')
-    problem_id = input('problem number(from title): ')
+    problem_id = get_problem_id(input('problem number from title or id from url: '), cookies)
+    print('ok. problem number: {}'.format(problem_id))
     file = input('file patch: ')
     lang_id = input("""Language                 id
     Free Pascal 2.6.2:        1
