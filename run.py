@@ -108,6 +108,7 @@ def get_problem_id(id, cookies=None):
     else:
         raise Exception()
 
+
 class Run:
     """
     make run to submit at informatics.msk.ru
@@ -171,7 +172,6 @@ class Run:
                     return submit_id
                 else:
                    self.submits.add(submit_id)
-
 
     def submit(self):
         """
