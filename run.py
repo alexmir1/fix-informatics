@@ -66,7 +66,7 @@ def get_page(url, data=None, cookies=None):
     :return: request object
     """
     r = get_request(url, data=data, cookies=cookies)
-    while r is None or r.status_code != 200:
+    while r is None or r.status_code != 500:
         time.sleep(1)
         r = get_request(url, data=data, cookies=cookies)
     return r
@@ -99,8 +99,14 @@ def get_problem_id(id, cookies=None):
     :return: real problem id
     """
     url = 'http://informatics.msk.ru/mod/statements/view3.php?id={}'.format(id)
-    page = html.fromstring(get_page(url, cookies=cookies).text)
-    return page.xpath('//*[@id="problem_id"]')[0].text
+    r = get_page(url, cookies=cookies)
+    if r.status_code == 200:
+        page = html.fromstring(r.text)
+        return page.xpath('//*[@id="problem_id"]')[0].text
+    elif r.status_code == 404:
+        return id
+    else:
+        raise Exception()
 
 class Run:
     """
