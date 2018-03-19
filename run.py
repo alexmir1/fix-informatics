@@ -66,7 +66,7 @@ def get_page(url, data=None, cookies=None):
     :return: request object
     """
     r = get_request(url, data=data, cookies=cookies)
-    while r is None or r.status_code == 500:
+    while r is None or r.status_code != 200:
         time.sleep(1)
         r = get_request(url, data=data, cookies=cookies)
     return r
@@ -196,7 +196,7 @@ if __name__ == '__main__':
     problem_id = get_problem_id(input('problem number from title or id from url: '), cookies)
     print('ok. problem number: {}'.format(problem_id))
     file = input('file patch: ')
-    lang_id = input("""Language                 id
+    lang_id = input("""    Language                 id
     Free Pascal 2.6.2:        1
     GNU C 4.9                 2
     GNU C++ 4.9               3
